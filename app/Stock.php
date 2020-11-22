@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Stock extends Model
 {
+    public function books() {
+        return $this->belongsTo(Book::class);
+    }
+
     public function balance() {
         return $this->received_amount - $this->issued_amount;
     }
