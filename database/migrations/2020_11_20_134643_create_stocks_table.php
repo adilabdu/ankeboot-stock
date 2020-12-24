@@ -20,6 +20,7 @@ class CreateStocksTable extends Migration
             $table->boolean('pkg');
             $table->integer('received_amount')->default(0);
             $table->integer('issued_amount')->default(0);
+            $table->boolean('consignment');
             $table->timestamps();
         });
     }
