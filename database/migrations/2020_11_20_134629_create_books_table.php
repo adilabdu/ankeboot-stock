@@ -19,8 +19,8 @@ class CreateBooksTable extends Migration
             $table->string('author')->nullable();
             $table->string('published_year')->nullable();
             $table->string('ISBN')->unique()->nullable();
-            $table->double('cost_price');
-            $table->double('selling_price');
+            $table->float('cost_price');
+            $table->float('selling_price');
             $table->timestamps();
         });
     }

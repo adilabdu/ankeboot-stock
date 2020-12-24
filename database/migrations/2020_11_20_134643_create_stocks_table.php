@@ -15,10 +15,12 @@ class CreateStocksTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('invoice')->unique();
+            $table->unsignedBigInteger('book_id');
+            $table->string('invoice');
             $table->boolean('pkg');
             $table->integer('received_amount')->default(0);
             $table->integer('issued_amount')->default(0);
+            $table->boolean('consignment');
             $table->timestamps();
         });
     }
