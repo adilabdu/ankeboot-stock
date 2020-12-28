@@ -26,7 +26,12 @@ class StockRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'book_id' => 'required',
+            'invoice' => 'required',
+            'pkg' => 'nullable',
+            'consignment' => 'nullable',
+            'received_amount' => 'nullable',
+            'issued_amount' => 'nullable',
         ];
     }
 
