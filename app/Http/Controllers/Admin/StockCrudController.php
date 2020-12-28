@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StockRequest;
+use App\Models\Book;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -42,13 +43,44 @@ class StockCrudController extends CrudController
         ]);
         CRUD::column('received_amount');
         CRUD::column('issued_amount');
-        CRUD::column('pkg')->type('boolean');
-        CRUD::column('consignment')->type('boolean');
+        CRUD::column('pkg')
+            ->type('boolean')
+            ->label('PKG')
+            ->wrapper([
+                'element' => 'span',
+                'class'   => static function ($crud, $column, $entry) {
+                    return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
+                },
+            ]);
         CRUD::addColumn([
             'label' => 'Stock Balance',
             'type'  => 'model_function',
             'function_name' => 'balance'
         ]);
+
+        // Filter By Invoice
+        $this->crud->addFilter([
+        'type'  => 'text',
+        'name'  => 'invoice',
+        'label' => 'Invoice'
+        ],
+        false,
+        function($value) { // if the filter is active
+             $this->crud->addClause('where', 'invoice', '=', "$value");
+        });
+
+        // Filter By Book (This is Stock Card)
+        $this->crud->addFilter([ // select2 filter
+            'name' => 'book_id',
+            'type' => 'select2',
+            'label'=> 'Book',
+        ], function () {
+            return Book::all()->keyBy('id')->pluck('name', 'id')->toArray();
+        }, function ($value) { // if the filter is active
+            $this->crud->addClause('where', 'book_id', $value);
+        });
+
+        CRUD::enableExportButtons();
     }
 
     protected function setupCreateOperation()
@@ -79,7 +111,6 @@ class StockCrudController extends CrudController
         ]);
 
         CRUD::field('pkg')->size(1);
-        CRUD::field('consignment')->size(2);
     }
 
     protected function setupUpdateOperation()

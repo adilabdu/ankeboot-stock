@@ -30,7 +30,8 @@ class BookRequest extends FormRequest
             'published_year' => 'integer',
             'ISBN' => 'unique:books|integer|nullable',
             'cost_price' => 'numeric',
-            'selling_price' => 'numeric'
+            'selling_price' => 'numeric',
+            'consignment' => 'required',
         ];
     }
 

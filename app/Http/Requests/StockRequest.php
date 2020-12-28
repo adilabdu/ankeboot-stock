@@ -29,7 +29,6 @@ class StockRequest extends FormRequest
             'book_id' => 'required',
             'invoice' => 'required',
             'pkg' => 'nullable',
-            'consignment' => 'nullable',
             'received_amount' => 'nullable',
             'issued_amount' => 'nullable',
         ];

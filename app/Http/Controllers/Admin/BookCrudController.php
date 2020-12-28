@@ -43,6 +43,26 @@ class BookCrudController extends CrudController
             'type'  => 'model_function',
             'function_name' => 'balance'
         ]);
+        CRUD::column('consignment')
+            ->type('boolean')
+            ->wrapper([
+                'element' => 'span',
+                'class'   => static function ($crud, $column, $entry) {
+                    return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
+                },
+            ]);
+        CRUD::addColumn([
+            'label'     => 'Stock Card', // Table column heading
+            'type'      => 'relationship_count',
+            'name'      => 'stocks', // the method that defines the relationship in your Model
+            'wrapper'   => [
+                'href' => function ($crud, $column, $entry, $related_key) {
+                    return backpack_url('stock?book_id='.$entry->getKey());
+                },
+            ],
+        ]);
+
+        CRUD::enableExportButtons();
     }
 
     protected function setupCreateOperation()
@@ -58,7 +78,7 @@ class BookCrudController extends CrudController
         CRUD::field('cost_price')->size(4)->type('number');
         CRUD::field('selling_price')->size(4)->type('number');
         CRUD::field('ISBN')->size(4)->type('number');
-
+        CRUD::field('consignment')->size(2);
     }
 
     protected function setupUpdateOperation()
