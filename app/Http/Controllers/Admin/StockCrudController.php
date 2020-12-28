@@ -79,6 +79,8 @@ class StockCrudController extends CrudController
         }, function ($value) { // if the filter is active
             $this->crud->addClause('where', 'book_id', $value);
         });
+
+        CRUD::enableExportButtons();
     }
 
     protected function setupCreateOperation()

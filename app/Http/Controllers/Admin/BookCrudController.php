@@ -61,6 +61,8 @@ class BookCrudController extends CrudController
                 },
             ],
         ]);
+
+        CRUD::enableExportButtons();
     }
 
     protected function setupCreateOperation()
