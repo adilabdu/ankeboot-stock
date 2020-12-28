@@ -43,6 +43,16 @@ class BookCrudController extends CrudController
             'type'  => 'model_function',
             'function_name' => 'balance'
         ]);
+        CRUD::addColumn([
+            'label'     => 'Stock Card', // Table column heading
+            'type'      => 'relationship_count',
+            'name'      => 'stocks', // the method that defines the relationship in your Model
+            'wrapper'   => [
+                'href' => function ($crud, $column, $entry, $related_key) {
+                    return backpack_url('stock?book_id='.$entry->getKey());
+                },
+            ],
+        ]);
     }
 
     protected function setupCreateOperation()

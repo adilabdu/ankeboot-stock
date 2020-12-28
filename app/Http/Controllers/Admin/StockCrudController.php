@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StockRequest;
+use App\Models\Book;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -49,6 +50,28 @@ class StockCrudController extends CrudController
             'type'  => 'model_function',
             'function_name' => 'balance'
         ]);
+
+        // Filter By Invoice
+        $this->crud->addFilter([
+        'type'  => 'text',
+        'name'  => 'invoice',
+        'label' => 'Invoice'
+        ],
+        false,
+        function($value) { // if the filter is active
+             $this->crud->addClause('where', 'invoice', '=', "$value");
+        });
+
+        // Filter By Book (This is Stock Card)
+        $this->crud->addFilter([ // select2 filter
+            'name' => 'book_id',
+            'type' => 'select2',
+            'label'=> 'Book',
+        ], function () {
+            return Book::all()->keyBy('id')->pluck('name', 'id')->toArray();
+        }, function ($value) { // if the filter is active
+            $this->crud->addClause('where', 'book_id', $value);
+        });
     }
 
     protected function setupCreateOperation()
