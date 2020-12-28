@@ -52,7 +52,6 @@ class StockCrudController extends CrudController
                     return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
                 },
             ]);
-        CRUD::column('consignment')->type('boolean');
         CRUD::addColumn([
             'label' => 'Stock Balance',
             'type'  => 'model_function',
@@ -110,7 +109,6 @@ class StockCrudController extends CrudController
         ]);
 
         CRUD::field('pkg')->size(1);
-        CRUD::field('consignment')->size(2);
     }
 
     protected function setupUpdateOperation()
