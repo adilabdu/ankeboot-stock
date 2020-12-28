@@ -11,7 +11,21 @@ class Book extends Model
 
     protected $guarded = [];
 
-    public function stock() {
+    public function stocks() {
         return $this->hasMany(Stock::class);
+    }
+
+    public function balance() {
+
+        $balance = 0;
+        $stocks = $this->stocks;
+
+        if($stocks) {
+            foreach ($stocks as $stock) {
+                $balance += $stock->balance();
+            }
+        }
+
+        return $balance;
     }
 }
