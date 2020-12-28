@@ -43,7 +43,15 @@ class StockCrudController extends CrudController
         ]);
         CRUD::column('received_amount');
         CRUD::column('issued_amount');
-        CRUD::column('pkg')->type('boolean');
+        CRUD::column('pkg')
+            ->type('boolean')
+            ->label('PKG')
+            ->wrapper([
+                'element' => 'span',
+                'class'   => static function ($crud, $column, $entry) {
+                    return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
+                },
+            ]);
         CRUD::column('consignment')->type('boolean');
         CRUD::addColumn([
             'label' => 'Stock Balance',
