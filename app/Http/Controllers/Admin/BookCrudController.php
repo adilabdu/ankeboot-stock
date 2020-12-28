@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\BookRequest;
+use App\Models\Book;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
-/**
- * Class BookCrudController
- * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
- */
 class BookCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
@@ -22,7 +19,7 @@ class BookCrudController extends CrudController
 
     public function setup()
     {
-        CRUD::setModel(\App\Models\Book::class);
+        CRUD::setModel(Book::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/book');
         CRUD::setEntityNameStrings('book', 'books');
     }
@@ -35,9 +32,9 @@ class BookCrudController extends CrudController
             'label' => 'Title'
         ]);
         CRUD::column('author');
-        CRUD::column('published_year');
-        CRUD::column('cost_price');
-        CRUD::column('selling_price');
+        CRUD::column('published_year')->label('Published Year');
+        CRUD::column('cost_price')->label('Cost Price');
+        CRUD::column('selling_price')->label('Selling Price');
         CRUD::addColumn([
             'label' => 'Book Balance',
             'type'  => 'model_function',
@@ -52,9 +49,9 @@ class BookCrudController extends CrudController
                 },
             ]);
         CRUD::addColumn([
-            'label'     => 'Stock Card', // Table column heading
+            'label'     => 'Stock Card',
             'type'      => 'relationship_count',
-            'name'      => 'stocks', // the method that defines the relationship in your Model
+            'name'      => 'stocks',
             'wrapper'   => [
                 'href' => function ($crud, $column, $entry, $related_key) {
                     return backpack_url('stock?book_id='.$entry->getKey());
