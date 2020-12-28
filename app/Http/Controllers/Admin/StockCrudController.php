@@ -18,12 +18,8 @@ class StockCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
 
-    /**
-     * Configure the CrudPanel object. Apply settings to all operations.
-     * 
-     * @return void
-     */
     public function setup()
     {
         CRUD::setModel(\App\Models\Stock::class);
@@ -31,48 +27,61 @@ class StockCrudController extends CrudController
         CRUD::setEntityNameStrings('stock', 'stocks');
     }
 
-    /**
-     * Define what happens when the List operation is loaded.
-     * 
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
-    protected function setupListOperation()
+    public function fetchBook()
     {
-        CRUD::setFromDb(); // columns
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        return $this->fetch(\App\Models\Book::class);
     }
 
-    /**
-     * Define what happens when the Create operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
+    protected function setupListOperation()
+    {
+
+        CRUD::column('invoice');
+        CRUD::addColumn([
+            'name' => 'book',
+            'type' => 'relationship'
+        ]);
+        CRUD::column('received_amount');
+        CRUD::column('issued_amount');
+        CRUD::column('pkg')->type('boolean');
+        CRUD::column('consignment')->type('boolean');
+        CRUD::addColumn([
+            'label' => 'Stock Balance',
+            'type'  => 'model_function',
+            'function_name' => 'balance'
+        ]);
+    }
+
     protected function setupCreateOperation()
     {
         CRUD::setValidation(StockRequest::class);
 
-        CRUD::setFromDb(); // fields
+        CRUD::field('invoice')->size(4);
+        CRUD::addField([
+            'name' => 'book_id',
+            'type' => "relationship",
+            'ajax' => true,
+            'wrapper' => ['class' => 'form-group col-md-8'],
+            'placeholder' => 'Select a book',
+            'inline_create' => ['stock' => 'book']
+        ]);
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
+        CRUD::addField([
+            'name' => 'received_amount',
+            'label' => 'Received Amount',
+            'default' => '0',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+        ]);
+        CRUD::addField([
+            'name' => 'issued_amount',
+            'label' => 'Issued Amount',
+            'default' => '0',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+        ]);
+
+        CRUD::field('pkg')->size(1);
+        CRUD::field('consignment')->size(2);
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();

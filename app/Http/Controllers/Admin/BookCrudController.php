@@ -18,12 +18,8 @@ class BookCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\InlineCreateOperation;
 
-    /**
-     * Configure the CrudPanel object. Apply settings to all operations.
-     * 
-     * @return void
-     */
     public function setup()
     {
         CRUD::setModel(\App\Models\Book::class);
@@ -31,48 +27,40 @@ class BookCrudController extends CrudController
         CRUD::setEntityNameStrings('book', 'books');
     }
 
-    /**
-     * Define what happens when the List operation is loaded.
-     * 
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
     protected function setupListOperation()
     {
-        CRUD::setFromDb(); // columns
 
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        CRUD::addColumn([
+            'name' => 'name',
+            'label' => 'Title'
+        ]);
+        CRUD::column('author');
+        CRUD::column('published_year');
+        CRUD::column('cost_price');
+        CRUD::column('selling_price');
+        CRUD::addColumn([
+            'label' => 'Book Balance',
+            'type'  => 'model_function',
+            'function_name' => 'balance'
+        ]);
     }
 
-    /**
-     * Define what happens when the Create operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
     protected function setupCreateOperation()
     {
         CRUD::setValidation(BookRequest::class);
 
-        CRUD::setFromDb(); // fields
+         CRUD::addField([
+            'name' => 'name',
+            'label' => 'Title'
+        ]);
+        CRUD::field('author')->size(8);
+        CRUD::field('published_year')->size(4)->type('number');
+        CRUD::field('cost_price')->size(4)->type('number');
+        CRUD::field('selling_price')->size(4)->type('number');
+        CRUD::field('ISBN')->size(4)->type('number');
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     * 
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
