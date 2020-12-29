@@ -32,7 +32,11 @@ class BookCrudController extends CrudController
             'label' => 'Title'
         ]);
         CRUD::column('author');
-        CRUD::column('published_year')->label('Published Year');
+        CRUD::addColumn([
+            'name' => 'published_year',
+            'label' => 'Published Year',
+            'visibleInTable' => false
+        ]);
         CRUD::column('cost_price')->label('Cost Price');
         CRUD::column('selling_price')->label('Selling Price');
         CRUD::addColumn([
@@ -49,6 +53,10 @@ class BookCrudController extends CrudController
                 },
             ]);
         CRUD::addColumn([
+            'name' => 'ISBN',
+            'visibleInTable' => false,
+        ]);
+        CRUD::addColumn([
             'label'     => 'Stock Card',
             'type'      => 'relationship_count',
             'name'      => 'stocks',
@@ -57,6 +65,15 @@ class BookCrudController extends CrudController
                     return backpack_url('stock?book_id='.$entry->getKey());
                 },
             ],
+        ]);
+        CRUD::addColumn([
+            'label' => 'Recorded On',
+            'name' => 'created_at',
+            'visibleInTable' => false
+        ]);
+        CRUD::addColumn([
+            'label' => 'Last Updated',
+            'name' => 'updated_at',
         ]);
 
         CRUD::enableExportButtons();
