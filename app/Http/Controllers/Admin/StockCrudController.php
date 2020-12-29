@@ -57,6 +57,15 @@ class StockCrudController extends CrudController
             'type'  => 'model_function',
             'function_name' => 'balance'
         ]);
+        CRUD::addColumn([
+            'label' => 'Recorded On',
+            'name' => 'created_at',
+            'visibleInTable' => false
+        ]);
+        CRUD::addColumn([
+            'label' => 'Last Updated',
+            'name' => 'updated_at',
+        ]);
 
         // Filter By Invoice
         $this->crud->addFilter([
