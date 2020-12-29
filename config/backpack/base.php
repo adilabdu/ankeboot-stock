@@ -2,45 +2,17 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Look & feel customizations
-    |--------------------------------------------------------------------------
-    |
-    | Make it yours.
-    |
-    */
-
-    // Date & Datetime Format Syntax: https://carbon.nesbot.com/docs/#api-localization
     'default_date_format'     => 'D MMM YYYY',
     'default_datetime_format' => 'D MMM YYYY, HH:mm',
 
-    // Direction, according to language
-    // (left-to-right vs right-to-left)
     'html_direction' => 'ltr',
 
-    // ----
-    // HEAD
-    // ----
+    'project_name' => 'Ankeboot Stocks Manager',
 
-    // Project name. Shown in the window title.
-    'project_name' => 'Backpack Admin Panel',
+    'home_link' => '/admin',
 
-    // When clicking on the admin panel's top-left logo/name,
-    // where should the user be redirected?
-    // The string below will be passed through the url() helper.
-    // - default: '' (project root)
-    // - alternative: 'admin' (the admin's dashboard)
-    'home_link' => '',
-
-    // Content of the HTML meta robots tag to prevent indexing and link following
     'meta_robots_content' => 'noindex, nofollow',
 
-    // ------
-    // STYLES
-    // ------
-
-    // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
         'packages/backpack/base/css/bundle.css',
 
@@ -49,15 +21,14 @@ return [
         // 'packages/animate.css/animate.min.css',
         // 'packages/noty/noty.css',
 
-        // Load the fonts separately (so that you can replace them at will):
         'packages/source-sans-pro/source-sans-pro.css',
         'packages/line-awesome/css/line-awesome.min.css',
 
-        // Example (the fonts above, loaded from CDN instead)
+        // The fonts above, loaded from CDN instead
         // 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css',
         // 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic',
 
-        // Example (load font-awesome instead of line-awesome):
+        // Load font-awesome instead of line-awesome:
         // 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css',
     ],
 
@@ -66,14 +37,8 @@ return [
         // 'css/app.css' => '',
     ],
 
-    // ------
-    // HEADER
-    // ------
+    'project_logo'   => '<b>ANKEBOOT</b>&nbsp;Stocks',
 
-    // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo'   => '<b>Back</b>pack',
-
-    // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => true,
 
     // Horizontal navbar classes. Helps make the admin panel look similar to your project's design.
@@ -81,9 +46,6 @@ return [
     // For background colors use: bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan, bg-white
     // For links to be visible on different background colors use: "navbar-dark", "navbar-light", "navbar-color"
 
-    // ----
-    // BODY
-    // ----
 
     // Body element classes.
     'body_class' => 'app aside-menu-fixed sidebar-lg-show',
@@ -95,27 +57,20 @@ return [
     // Try "sidebar-light" or "sidebar-dark" for dark/light links
     // You can also add a background class like bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan
 
-    // ------
-    // FOOTER
-    // ------
-
     // Footer element classes.
     'footer_class' => 'app-footer d-print-none',
     // hide it with d-none
     // change background color with bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan, bg-white
 
     // Developer or company name. Shown in footer.
-    'developer_name' => 'Cristian Tabacitu',
+    'developer_name' => 'Adil Abdu Bushra',
 
     // Developer website. Link in footer. Type false if you want to hide it.
-    'developer_link' => 'http://tabacitu.ro',
+    'developer_link' => 'adilabdu68@gmail.com',
 
     // Show powered by Laravel Backpack in the footer? true/false
     'show_powered_by' => true,
 
-    // -------
-    // SCRIPTS
-    // -------
 
     // JS files that are loaded in all pages, using Laravel's asset() helper
     'scripts' => [
