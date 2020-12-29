@@ -106,14 +106,15 @@ class StockCrudController extends CrudController
     {
         CRUD::setValidation(StockRequest::class);
 
-        CRUD::field('invoice')->size(4);
+        CRUD::field('invoice')->size(4)->hint('Receipt No.');
         CRUD::addField([
             'name' => 'book_id',
             'type' => "relationship",
             'ajax' => true,
             'wrapper' => ['class' => 'form-group col-md-8'],
+            'inline_create' => ['stock' => 'book'],
             'placeholder' => 'Select a book',
-            'inline_create' => ['stock' => 'book']
+            'hint' => 'Select a book'
         ]);
 
         CRUD::addField([
@@ -129,7 +130,7 @@ class StockCrudController extends CrudController
             'wrapper' => ['class' => 'form-group col-md-6'],
         ]);
 
-        CRUD::field('pkg')->size(1);
+        CRUD::field('pkg')->size(1)->label('PKG?');
     }
 
     protected function setupUpdateOperation()
