@@ -30,7 +30,10 @@ class StockCrudController extends CrudController
 
     public function fetchBook()
     {
-        return $this->fetch(\App\Models\Book::class);
+        return $this->fetch([
+            'model' => Book::class,
+            'searchable_attributes' => ['name', 'author', 'isbn'],
+        ]);
     }
 
     protected function setupListOperation()
@@ -48,13 +51,13 @@ class StockCrudController extends CrudController
             ->label('PKG')
             ->wrapper([
                 'element' => 'span',
-                'class'   => static function ($crud, $column, $entry) {
-                    return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
+                'class' => static function ($crud, $column, $entry) {
+                    return 'badge badge-' . ($entry->{$column['name']} ? 'success' : 'default');
                 },
             ]);
         CRUD::addColumn([
             'label' => 'Stock Balance',
-            'type'  => 'model_function',
+            'type' => 'model_function',
             'function_name' => 'balance'
         ]);
         CRUD::addColumn([
@@ -69,25 +72,35 @@ class StockCrudController extends CrudController
 
         // Filter By Invoice
         $this->crud->addFilter([
-        'type'  => 'text',
-        'name'  => 'invoice',
-        'label' => 'Invoice'
+            'type' => 'text',
+            'name' => 'invoice',
+            'label' => 'Invoice'
         ],
-        false,
-        function($value) { // if the filter is active
-             $this->crud->addClause('where', 'invoice', '=', "$value");
-        });
+            false,
+            function ($value) { // if the filter is active
+                $this->crud->addClause('where', 'invoice', '=', "$value");
+            });
 
         // Filter By Book (This is Stock Card)
         $this->crud->addFilter([ // select2 filter
             'name' => 'book_id',
             'type' => 'select2',
-            'label'=> 'Book',
+            'label' => 'Book',
         ], function () {
             return Book::all()->keyBy('id')->pluck('name', 'id')->toArray();
         }, function ($value) { // if the filter is active
             $this->crud->addClause('where', 'book_id', $value);
         });
+
+        $this->crud->addFilter([
+            'type' => 'date_range',
+            'name' => 'created_at',
+            'label' => 'Date Range'
+        ], false, function ($value) { // if the filter is active, apply these constraints
+                 $dates = json_decode($value);
+                 $this->crud->addClause('where', 'created_at', '>=', $dates->from);
+                 $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            });
 
         CRUD::enableExportButtons();
     }
@@ -96,14 +109,15 @@ class StockCrudController extends CrudController
     {
         CRUD::setValidation(StockRequest::class);
 
-        CRUD::field('invoice')->size(4);
+        CRUD::field('invoice')->size(4)->hint('Receipt No.');
         CRUD::addField([
             'name' => 'book_id',
             'type' => "relationship",
             'ajax' => true,
             'wrapper' => ['class' => 'form-group col-md-8'],
+            'inline_create' => ['stock' => 'book'],
             'placeholder' => 'Select a book',
-            'inline_create' => ['stock' => 'book']
+            'hint' => 'Select a book. Search by <span style="color: black">Title, Author</span> or <span style="color: black">ISBN</span>'
         ]);
 
         CRUD::addField([
@@ -119,7 +133,7 @@ class StockCrudController extends CrudController
             'wrapper' => ['class' => 'form-group col-md-6'],
         ]);
 
-        CRUD::field('pkg')->size(1);
+        CRUD::field('pkg')->size(1)->label('PKG?');
     }
 
     protected function setupUpdateOperation()

@@ -45,12 +45,16 @@ class BookCrudController extends CrudController
             'function_name' => 'balance'
         ]);
         CRUD::column('consignment')
+            ->label('Type')
             ->type('boolean')
             ->wrapper([
                 'element' => 'span',
                 'class'   => static function ($crud, $column, $entry) {
                     return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
                 },
+            ])->options([
+                0 => 'Cash',
+                1 => 'Consignment'
             ]);
         CRUD::addColumn([
             'name' => 'ISBN',
@@ -62,7 +66,7 @@ class BookCrudController extends CrudController
             'name'      => 'stocks',
             'wrapper'   => [
                 'href' => function ($crud, $column, $entry, $related_key) {
-                    return backpack_url('stock?book_id='.$entry->getKey());
+                    return backpack_url('stock?book_id='.$entry->getKey().'&stock_report='.true);
                 },
             ],
         ]);
@@ -77,6 +81,28 @@ class BookCrudController extends CrudController
         ]);
 
         CRUD::enableExportButtons();
+
+        // dropdown filter
+        $this->crud->addFilter([
+            'name'  => 'consignment',
+            'type'  => 'dropdown',
+            'label' => 'Consignment / Cash'
+        ], [
+            1 => 'Consignment Only',
+            0 => 'Cash Only',
+        ], function($value) { // if the filter is active
+             $this->crud->addClause('where', 'consignment', $value);
+        });
+
+        $this->crud->addFilter([
+            'type' => 'date_range',
+            'name' => 'created_at',
+            'label' => 'Date Range'
+        ], false, function ($value) { // if the filter is active, apply these constraints
+            $dates = json_decode($value);
+            $this->crud->addClause('where', 'created_at', '>=', $dates->from);
+            $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+        });
     }
 
     protected function setupCreateOperation()
@@ -89,10 +115,10 @@ class BookCrudController extends CrudController
         ]);
         CRUD::field('author')->size(8);
         CRUD::field('published_year')->size(4)->type('number');
-        CRUD::field('cost_price')->size(4)->type('number');
-        CRUD::field('selling_price')->size(4)->type('number');
+        CRUD::field('cost_price')->size(4);
+        CRUD::field('selling_price')->size(4);
         CRUD::field('ISBN')->size(4)->type('number');
-        CRUD::field('consignment')->size(2);
+        CRUD::field('consignment')->size(12);
     }
 
     protected function setupUpdateOperation()
