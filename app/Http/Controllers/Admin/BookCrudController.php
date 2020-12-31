@@ -37,12 +37,17 @@ class BookCrudController extends CrudController
             'label' => 'Published Year',
             'visibleInTable' => false
         ]);
-        CRUD::column('cost_price')->label('Cost Price');
-        CRUD::column('selling_price')->label('Selling Price');
+//        CRUD::column('cost_price')->label('Cost Price');
+//        CRUD::column('selling_price')->label('Selling Price');
         CRUD::addColumn([
             'label' => 'Book Balance',
             'type'  => 'model_function',
             'function_name' => 'balance'
+        ]);
+        CRUD::addColumn([
+            'label' => 'Cost Price (Mean)',
+            'type' => 'model_function',
+            'function_name' => 'meanPrice'
         ]);
         CRUD::column('consignment')
             ->label('Type')
@@ -113,10 +118,10 @@ class BookCrudController extends CrudController
             'name' => 'name',
             'label' => 'Title'
         ]);
-        CRUD::field('author')->size(8);
+        CRUD::field('author')->size(4);
         CRUD::field('published_year')->size(4)->type('number');
-        CRUD::field('cost_price')->size(4);
-        CRUD::field('selling_price')->size(4);
+//        CRUD::field('cost_price')->size(4);
+//        CRUD::field('selling_price')->size(4);
         CRUD::field('ISBN')->size(4)->type('number');
         CRUD::field('consignment')->size(12);
     }

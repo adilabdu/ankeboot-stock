@@ -31,6 +31,29 @@ class Book extends Model
         return $balance;
     }
 
+    public function meanPrice() {
+
+        $meanPrice = 0;
+        $sum = 0;
+        $total = 0;
+
+        if($this->stocks->count() > 0) {
+            foreach ($this->stocks as $stock) {
+                $sum += ($stock->cost_price * $stock->received_amount);
+                $total += $stock->received_amount;
+            }
+
+            if($total > 0) {
+                $meanPrice = round($sum / $total, 2);
+            }
+
+        } else {
+            $meanPrice = 'N/A';
+        }
+
+        return $meanPrice;
+    }
+
     public function identifiableAttribute()
     {
         return 'name';
