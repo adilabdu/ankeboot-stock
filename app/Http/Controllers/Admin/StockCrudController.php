@@ -30,7 +30,10 @@ class StockCrudController extends CrudController
 
     public function fetchBook()
     {
-        return $this->fetch(\App\Models\Book::class);
+        return $this->fetch([
+            'model' => Book::class,
+            'searchable_attributes' => ['name', 'author', 'isbn'],
+        ]);
     }
 
     protected function setupListOperation()
@@ -114,7 +117,7 @@ class StockCrudController extends CrudController
             'wrapper' => ['class' => 'form-group col-md-8'],
             'inline_create' => ['stock' => 'book'],
             'placeholder' => 'Select a book',
-            'hint' => 'Select a book'
+            'hint' => 'Select a book. Search by <span style="color: black">Title, Author</span> or <span style="color: black">ISBN</span>'
         ]);
 
         CRUD::addField([

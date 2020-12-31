@@ -118,7 +118,7 @@ class BookCrudController extends CrudController
         CRUD::field('cost_price')->size(4);
         CRUD::field('selling_price')->size(4);
         CRUD::field('ISBN')->size(4)->type('number');
-        CRUD::field('consignment')->size(2);
+        CRUD::field('consignment')->size(12);
     }
 
     protected function setupUpdateOperation()
