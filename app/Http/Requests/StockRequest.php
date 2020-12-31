@@ -30,6 +30,7 @@ class StockRequest extends FormRequest
             'invoice' => 'required',
             'pkg' => 'nullable',
             'received_amount' => 'nullable',
+            'cost_price' => 'numeric|required',
             'issued_amount' => 'nullable',
         ];
     }

@@ -46,15 +46,16 @@ class StockCrudController extends CrudController
         ]);
         CRUD::column('received_amount');
         CRUD::column('issued_amount');
-        CRUD::column('pkg')
-            ->type('boolean')
-            ->label('PKG')
-            ->wrapper([
-                'element' => 'span',
-                'class' => static function ($crud, $column, $entry) {
-                    return 'badge badge-' . ($entry->{$column['name']} ? 'success' : 'default');
-                },
-            ]);
+//        CRUD::column('pkg')
+//            ->type('boolean')
+//            ->label('PKG')
+//            ->wrapper([
+//                'element' => 'span',
+//                'class' => static function ($crud, $column, $entry) {
+//                    return 'badge badge-' . ($entry->{$column['name']} ? 'success' : 'default');
+//                },
+//            ]);
+        CRUD::column('cost_price')->label('Cost Price');
         CRUD::addColumn([
             'label' => 'Stock Balance',
             'type' => 'model_function',
@@ -121,16 +122,21 @@ class StockCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name' => 'cost_price',
+            'label' => 'Cost Price',
+            'wrapper' => ['class' => 'form-group col-md-4'],
+        ]);
+        CRUD::addField([
             'name' => 'received_amount',
             'label' => 'Received Amount',
             'default' => '0',
-            'wrapper' => ['class' => 'form-group col-md-6'],
+            'wrapper' => ['class' => 'form-group col-md-4'],
         ]);
         CRUD::addField([
             'name' => 'issued_amount',
             'label' => 'Issued Amount',
             'default' => '0',
-            'wrapper' => ['class' => 'form-group col-md-6'],
+            'wrapper' => ['class' => 'form-group col-md-4'],
         ]);
 
         CRUD::field('pkg')->size(1)->label('PKG?');

@@ -26,7 +26,6 @@ class BooksTableSeeder extends Seeder
                 'author' => $faker->name,
                 'published_year' => $faker->year,
                 'isbn' => $faker->isbn10,
-                'cost_price' => $price,
                 'selling_price' => $price * 1.49,
                 'consignment' => $faker->numberBetween(0, 2) % 2 ? true : false,
                 'created_at' => $date,
