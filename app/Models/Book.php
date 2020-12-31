@@ -11,6 +11,8 @@ class Book extends Model
 
     protected $guarded = [];
 
+//    protected $identifiableAttribute = 'author';
+
     public function stocks() {
         return $this->hasMany(Stock::class);
     }
@@ -27,5 +29,10 @@ class Book extends Model
         }
 
         return $balance;
+    }
+
+    public function identifiableAttribute()
+    {
+        return 'name';
     }
 }
