@@ -16,4 +16,8 @@ Route::group([
 ], function () { // custom admin routes
     Route::crud('book', 'BookCrudController');
     Route::crud('stock', 'StockCrudController');
-}); // this should be the absolute last line of this file
+
+    Route::get('import', 'FileIOController@importView');
+    Route::post('import', 'FileIOController@import')->name('import');
+}
+); // this should be the absolute last line of this file

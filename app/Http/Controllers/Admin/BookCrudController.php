@@ -5,17 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\BookRequest;
 use App\Models\Book;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\InlineCreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 class BookCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\InlineCreateOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
+    use InlineCreateOperation;
 
     public function setup()
     {
@@ -37,8 +43,6 @@ class BookCrudController extends CrudController
             'label' => 'Published Year',
             'visibleInTable' => false
         ]);
-//        CRUD::column('cost_price')->label('Cost Price');
-//        CRUD::column('selling_price')->label('Selling Price');
         CRUD::addColumn([
             'label' => 'Book Balance',
             'type'  => 'model_function',
@@ -87,7 +91,6 @@ class BookCrudController extends CrudController
 
         CRUD::enableExportButtons();
 
-        // dropdown filter
         $this->crud->addFilter([
             'name'  => 'consignment',
             'type'  => 'dropdown',
@@ -103,7 +106,7 @@ class BookCrudController extends CrudController
             'type' => 'date_range',
             'name' => 'created_at',
             'label' => 'Date Range'
-        ], false, function ($value) { // if the filter is active, apply these constraints
+        ], false, function ($value) {
             $dates = json_decode($value);
             $this->crud->addClause('where', 'created_at', '>=', $dates->from);
             $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
@@ -120,8 +123,6 @@ class BookCrudController extends CrudController
         ]);
         CRUD::field('author')->size(4);
         CRUD::field('published_year')->size(4)->type('number');
-//        CRUD::field('cost_price')->size(4);
-//        CRUD::field('selling_price')->size(4);
         CRUD::field('ISBN')->size(4)->type('number');
         CRUD::field('consignment')->size(12);
     }

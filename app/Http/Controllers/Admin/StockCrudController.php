@@ -4,26 +4,28 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StockRequest;
 use App\Models\Book;
+use App\Models\Stock;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
-/**
- * Class StockCrudController
- * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
- */
 class StockCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\FetchOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
+    use FetchOperation;
 
     public function setup()
     {
-        CRUD::setModel(\App\Models\Stock::class);
+        CRUD::setModel(Stock::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/stock');
         CRUD::setEntityNameStrings('stock', 'stocks');
     }
@@ -46,15 +48,6 @@ class StockCrudController extends CrudController
         ]);
         CRUD::column('received_amount');
         CRUD::column('issued_amount');
-//        CRUD::column('pkg')
-//            ->type('boolean')
-//            ->label('PKG')
-//            ->wrapper([
-//                'element' => 'span',
-//                'class' => static function ($crud, $column, $entry) {
-//                    return 'badge badge-' . ($entry->{$column['name']} ? 'success' : 'default');
-//                },
-//            ]);
         CRUD::column('cost_price')->label('Cost Price');
         CRUD::addColumn([
             'label' => 'Stock Balance',
@@ -76,20 +69,18 @@ class StockCrudController extends CrudController
             'type' => 'text',
             'name' => 'invoice',
             'label' => 'Invoice'
-        ],
-            false,
-            function ($value) { // if the filter is active
+        ], false, function ($value) { // if the filter is active
                 $this->crud->addClause('where', 'invoice', '=', "$value");
             });
 
         // Filter By Book (This is Stock Card)
-        $this->crud->addFilter([ // select2 filter
+        $this->crud->addFilter([
             'name' => 'book_id',
             'type' => 'select2',
             'label' => 'Book',
         ], function () {
             return Book::all()->keyBy('id')->pluck('name', 'id')->toArray();
-        }, function ($value) { // if the filter is active
+        }, function ($value) {
             $this->crud->addClause('where', 'book_id', $value);
         });
 
@@ -97,7 +88,7 @@ class StockCrudController extends CrudController
             'type' => 'date_range',
             'name' => 'created_at',
             'label' => 'Date Range'
-        ], false, function ($value) { // if the filter is active, apply these constraints
+        ], false, function ($value) {
                  $dates = json_decode($value);
                  $this->crud->addClause('where', 'created_at', '>=', $dates->from);
                  $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');

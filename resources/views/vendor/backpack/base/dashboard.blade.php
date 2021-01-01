@@ -84,4 +84,61 @@
 @endphp
 
 @section('content')
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header">Import Books from Excel</div>
+                <div class="card-body">
+
+                    @if(session('status'))
+
+                        <div class="alert alert-success" role="alert">
+
+                            {{ session('status') }}
+
+                        </div>
+
+                    @endif
+
+                    <form action="import" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="file" name="file">
+                                <label class="custom-file-label" for="customFile">Choose .xlsx file</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-actions">
+                            <button class="btn btn btn-primary" type="submit">
+
+                                <span class="ladda-label">
+                                    <i class="la la-cloud-upload"></i>
+                                    Upload
+                                </span>
+
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section('after_scripts')
+        <script src="{{asset('js/jquery.min.js')}}"></script>
+
+        <script>
+
+            $('.custom-file-input').on('change',function(){
+                let fileName = document.getElementById("file").files[0].name;
+                alert(fileName)
+                let label = $('.custom-file-label')
+                label.text(fileName)
+                label.css({'color': '#7C6AEF'})
+            })
+
+        </script>
+    @endsection
+
 @endsection
