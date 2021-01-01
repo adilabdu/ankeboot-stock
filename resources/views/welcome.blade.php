@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="ankeboot-stock/docs.html">Documentation</a>
+                    <a href="{{ backpack_url('../docs.html') }}">Documentation</a>
                     <a href="{{ backpack_url('') }}">Dashboard</a>
                 </div>
             </div>
