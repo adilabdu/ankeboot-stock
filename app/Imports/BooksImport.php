@@ -16,9 +16,9 @@ class BooksImport implements ToModel, WithHeadingRow
     {
         return new Book([
             'name' => $row['Title'],
-            'author' => $row['Author'],
-            'published_year' => $row['Published'],
-            'isbn' => $row['ISBN'],
+            'author' => $row['Author'] ? $row['Author'] : null,
+            'isbn' => $row['ISBN'] ? $row['ISBN'] : null,
+            'published_year' => $row['Published'] ? $row['Published'] : null,
             'consignment' => $row['Consignment'],
             'created_at' => now(),
             'updated_at' => now(),
