@@ -12,7 +12,9 @@
         "backpack/crud": "4.1.22",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "6.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "maatwebsite/excel": "^3.1",
+      "ext-json": "*"
     },
     "require-dev": {
         "backpack/generators": "^3.1",
