@@ -1,21 +1,36 @@
 @extends(backpack_view('blank'))
 
-@php
-/**    $widgets['before_content'][] = [
-        'type'        => 'jumbotron',
-        'heading'     => trans('backpack::base.welcome'),
-        'content'     => trans('backpack::base.use_sidebar'),
-        'button_link' => backpack_url('logout'),
-        'button_text' => trans('backpack::base.logout'),
-    ]; **/
+<?php
 
     use App\Models\Book;
+    use App\Models\Stock;use Backpack\CRUD\app\Library\Widget;
 
     $booksCount = Book::all()->count();
     $consignment = Book::where('consignment', true)->count();
     $cheques = Book::where('consignment', false)->count();
 
+    $stocks = Stock::all();
+
     $latestBook = Book::orderBy('created_at', 'DESC')->first();
+    $expensiveBook = Stock::orderBy('cost_price', 'DESC')->first();
+
+    $sum = 0;
+    $total = 0;
+    $averagePrice = 0;
+    foreach($stocks as $stock) {
+        $sum += $stock->cost_price * $stock->received_amount;
+        $total += $stock->received_amount;
+    }
+
+    if($total > 0) {
+        $averagePrice = $sum / $total;
+    }
+
+    if($expensiveBook) {
+        $expensiveBook = $expensiveBook->book;
+    } else {
+        $expensiveBook = 'N/A';
+    }
 
     $averageBalance = 0;
     $maxBalance = 0;
@@ -63,11 +78,11 @@
 			->group('hidden')
 		    ->type('progress')
 		    ->class('card border-0 text-white bg-warning')
-		    ->value($averageBalance == 'N/A' ? 'N/A' : floor($averageBalance))
+		    ->value($expensiveBook == 'N/A' ? 'N/A' : $expensiveBook->name . ' ('. $expensiveBook->meanPrice() .' ETB)')
 		    ->progressClass('progress-bar')
-		    ->description('Average Balance of Books in Inventory')
+		    ->description('Most Expensive Book')
 		    // ->progress(30)
-		    ->hint('Highest Balance: <span class="text-white">' . $maxBalance . '</span>'),
+		    ->hint('Mean Cost Price: <span class="text-white">' . ($total == 0 ? 'N/A' : $averagePrice . ' ETB') . '</span>'),
 
 		// both Widget::make() and Widget::add() accept an array as a parameter
 		// if you prefer defining your widgets as arrays
@@ -81,12 +96,12 @@
 		]),
 	]);
 
-@endphp
+?>
 
 @section('content')
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-5">
             <div class="card">
                 <div class="card-header">Import Books from Excel</div>
                 <div class="card-body">
@@ -106,17 +121,21 @@
                         <div class="form-group">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="file" name="file">
-                                <label class="custom-file-label" for="customFile">Choose .xlsx file</label>
+                                <label class="custom-file-label" for="customFile">Choose .xlsx, .csv file</label>
                             </div>
+                            <p style="margin: .25rem auto; color: #73818f; font-size: 0.9em;">
+                                Excel file's heading <b>must</b> be <code>Title, Author, Published, ISBN, Consignment</code>;
+                                in that order.
+                            </p>
                         </div>
                         <div class="form-group form-actions">
-                            <button class="btn btn btn-primary" type="submit">
-
-                                <span class="ladda-label">
+                            <button disabled class="upload-btn btn btn btn-primary" type="submit">
                                     <i class="la la-cloud-upload"></i>
                                     Upload
-                                </span>
-
+                            </button>
+                            <button type="button" class="cancel-btn btn btn-default">
+                                <i class="la la-ban"></i>
+                                Cancel
                             </button>
                         </div>
                     </form>
@@ -130,12 +149,20 @@
 
         <script>
 
-            $('.custom-file-input').on('change',function(){
+            let input = $('.custom-file-input')
+            let label = $('.custom-file-label')
+
+            input.on('change',function(){
                 let fileName = document.getElementById("file").files[0].name;
-                alert(fileName)
-                let label = $('.custom-file-label')
                 label.text(fileName)
-                label.css({'color': '#7C6AEF'})
+                $('.upload-btn').attr('disabled', false)
+            })
+
+            $('.cancel-btn').on('click', function() {
+                console.log('hello')
+                input.val('')
+                label.text('Choose .xlsx, .csv file')
+                $('.upload-btn').attr('disabled', true)
             })
 
         </script>
