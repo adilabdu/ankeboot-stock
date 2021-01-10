@@ -75,7 +75,7 @@ class BookCrudController extends CrudController
             'name'      => 'stocks',
             'wrapper'   => [
                 'href' => function ($crud, $column, $entry, $related_key) {
-                    return backpack_url('stock?book_id='.$entry->getKey().'&stock_report='.true);
+                    return backpack_url('stock?book_id='.$entry->getKey());
                 },
             ],
         ]);
