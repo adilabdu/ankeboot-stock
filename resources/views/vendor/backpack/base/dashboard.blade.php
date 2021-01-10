@@ -82,7 +82,7 @@
 		    ->progressClass('progress-bar')
 		    ->description('Most Expensive Book')
 		    // ->progress(30)
-		    ->hint('Mean Cost Price: <span class="text-white">' . ($total == 0 ? 'N/A' : $averagePrice . ' ETB') . '</span>'),
+		    ->hint('Mean Cost Price: <span class="text-white">' . ($total == 0 ? 'N/A' : round($averagePrice, 2) . ' ETB') . '</span>'),
 
 		// both Widget::make() and Widget::add() accept an array as a parameter
 		// if you prefer defining your widgets as arrays
@@ -101,26 +101,15 @@
 @section('content')
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-4">
             <div class="card">
                 <div class="card-header">Import Books from Excel</div>
                 <div class="card-body">
-
-                    @if(session('status'))
-
-                        <div class="alert alert-success" role="alert">
-
-                            {{ session('status') }}
-
-                        </div>
-
-                    @endif
-
                     <form action="import" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="file" name="file">
+                                <input style="cursor: pointer" type="file" class="custom-file-input" id="file" name="file">
                                 <label class="custom-file-label" for="customFile">Choose .xlsx, .csv file</label>
                             </div>
                             <p style="margin: .25rem auto; color: #73818f; font-size: 0.9em;">
