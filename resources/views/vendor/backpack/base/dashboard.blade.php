@@ -104,6 +104,17 @@
         <div class="col-sm-4">
             <div class="card">
                 <div class="card-header">Import Books from Excel</div>
+
+                @if(isset($errors) && $errors->any())
+
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $error)
+                            {{ $error }} <br>
+                        @endforeach
+                    </div>
+
+                @endif
+
                 <div class="card-body">
                     <form action="import" method="post" enctype="multipart/form-data">
                         @csrf
